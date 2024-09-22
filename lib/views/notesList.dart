@@ -3,6 +3,7 @@ import 'package:note_vault_flutter/components/noteListItem.dart';
 import 'package:note_vault_flutter/database/databaseHelper.dart';
 import 'package:note_vault_flutter/models/note.dart';
 import 'package:note_vault_flutter/views/addNote.dart';
+import 'package:note_vault_flutter/views/dummyPage.dart';
 
 class NotesList extends StatefulWidget {
   const NotesList({super.key});
@@ -35,6 +36,11 @@ class _NotesListState extends State<NotesList> {
     });
   }
 
+  void openDummy() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const DummyPage()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,6 +49,12 @@ class _NotesListState extends State<NotesList> {
             style: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.bold)),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit, color: Colors.white),
+            onPressed: () => openDummy(),
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _addNewNote(context),

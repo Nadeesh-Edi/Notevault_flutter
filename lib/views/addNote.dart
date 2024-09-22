@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:note_vault_flutter/components/header.dart';
+import 'package:note_vault_flutter/database/databaseHelper.dart';
+import 'package:note_vault_flutter/models/note.dart';
 
 class AddNote extends StatefulWidget {
   const AddNote({super.key});
@@ -16,7 +18,7 @@ class _AddNoteState extends State<AddNote> {
   String _title = "";
   String _content = "";
 
-  void saveNote(context) {
+  Future<void> saveNote(context) async {
     if (_title == "") {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text("Enter a title")));
@@ -24,10 +26,14 @@ class _AddNoteState extends State<AddNote> {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Content cannot be empty")));
     } else {
-      // Save note to database or local storage
-      ScaffoldMessenger.of(context)
+      Note saveNote = Note(title: _title, content: _content, createdAt: '');
+      int insertRes = await DatabaseHelper().insertNote(saveNote);
+      
+      if (!insertRes.isNegative) {
+        ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text("Note saved")));
-      Navigator.pop(context);
+        Navigator.pop(context);
+      }
     }
   }
 

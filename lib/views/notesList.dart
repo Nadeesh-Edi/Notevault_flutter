@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:note_vault_flutter/components/noteListItem.dart';
+import 'package:note_vault_flutter/database/databaseHelper.dart';
 import 'package:note_vault_flutter/models/note.dart';
 import 'package:note_vault_flutter/views/addNote.dart';
 
@@ -12,20 +13,26 @@ class NotesList extends StatefulWidget {
 
 class _NotesListState extends State<NotesList> {
   final String _title = "Notes List";
-  final List<Note> _notes = [
-    const Note(1, "Note 1", "This is note 1 content."),
-    const Note(2, "Note 2", "This is note 2 content."),
-    const Note(3, "Note 3", "This is note 3 content."),
-    const Note(4, "Note 4", "This is note 4 content."),
-    const Note(5, "Note 5", "This is note 5 content."),
-    const Note(6, "Note 6", "This is note 6 content."),
-    const Note(7, "Note 7", "This is note 7 content."),
-    const Note(8, "Note 8", "This is note 8 content."),
-  ];
+  List<Note> _notes = [];
 
-  void _addNewNote(context) {
-    Navigator.of(context)
+  @override
+  void initState() {
+    super.initState();
+    loadNotes();
+  }
+
+  Future<void> _addNewNote(context) async {
+    await Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => const AddNote()));
+
+    loadNotes();
+  }
+
+  void loadNotes() async {
+    List<Map<String, dynamic>> notesData = await DatabaseHelper().getNotes();
+    setState(() {
+      _notes = notesData.map((note) => Note.fromMap(note)).toList();
+    });
   }
 
   @override

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:note_vault_flutter/views/notesList.dart';
+import 'package:note_vault_flutter/database/databaseHelper.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DatabaseHelper().database;
   runApp(const MyApp());
 }
 
